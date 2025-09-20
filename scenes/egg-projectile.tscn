@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://mkcbgxufivrg"]
+
+[ext_resource type="Script" uid="uid://xmxlhapj5gee" path="res://scripts/EggProjectile.cs" id="1_ovxuu"]
+[ext_resource type="Texture2D" uid="uid://vx7ow7xsup6u" path="res://textures/egg-0.png" id="1_vhcvl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ovxuu"]
+atlas = ExtResource("1_vhcvl")
+region = Rect2(1, 1, 32, 32)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vhcvl"]
+
+[node name="EggProjectile" type="Node2D"]
+script = ExtResource("1_ovxuu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_ovxuu")
+
+[node name="Collision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
+scale = Vector2(0.5681754, 0.5681754)
+shape = SubResource("CapsuleShape2D_vhcvl")

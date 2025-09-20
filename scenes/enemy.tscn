@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqbe81i2vvfuh"]
+
+[ext_resource type="Texture2D" uid="uid://hygrex0s1ld1" path="res://textures/printer-0.png" id="1_7p1mj"]
+[ext_resource type="Script" uid="uid://boeueqo3f1npn" path="res://scripts/Enemy.cs" id="1_md0e3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_md0e3"]
+size = Vector2(18.29664, 17.895105)
+
+[node name="Enemy" type="Node2D"]
+script = ExtResource("1_md0e3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_7p1mj")
+
+[node name="Collision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
+position = Vector2(-1.0000002, -1.4663415)
+rotation = -3.1415925
+scale = Vector2(1.4210258, -1.3932682)
+shape = SubResource("RectangleShape2D_md0e3")
