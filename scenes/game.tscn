@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cb63xixi4tms6" path="res://scenes/game-ui.tscn" id="4_lbhrr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lnu2h"]
-size = Vector2(20, 22.130165)
+size = Vector2(20, 20.431942)
 
 [node name="Game" type="Node2D"]
 
@@ -27,34 +27,29 @@ tile_set = ExtResource("1_yqjtg")
 [node name="Spawner0" type="Node2D" parent="Entities"]
 position = Vector2(-159, -129)
 script = ExtResource("3_lnu2h")
-On = true
 
 [node name="Spawner1" type="Node2D" parent="Entities"]
 position = Vector2(-2, -129)
 script = ExtResource("3_lnu2h")
-On = true
 
 [node name="Spawner2" type="Node2D" parent="Entities"]
 position = Vector2(164, -129)
 script = ExtResource("3_lnu2h")
 
 [node name="Spawner3" type="Node2D" parent="Entities"]
-position = Vector2(-159, 187)
+position = Vector2(-154, 128)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
-On = true
 
 [node name="Spawner4" type="Node2D" parent="Entities"]
-position = Vector2(-2, 187)
+position = Vector2(3, 128)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
-On = true
 
 [node name="Spawner5" type="Node2D" parent="Entities"]
-position = Vector2(164, 187)
+position = Vector2(169, 128)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
-On = true
 
 [node name="Triggers" type="Node2D" parent="."]
 
@@ -62,7 +57,7 @@ On = true
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/EnemyStateTrigger"]
-position = Vector2(0, 8.780442)
+position = Vector2(0, 1.7804413)
 scale = Vector2(27.123917, 8.243912)
 shape = SubResource("RectangleShape2D_lnu2h")
 debug_color = Color(0, 0.6, 0.69803923, 0)

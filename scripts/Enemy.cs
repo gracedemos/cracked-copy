@@ -16,9 +16,11 @@ public partial class Enemy : Node2D
 
     public EnemyState State { get; private set; } = EnemyState.PresetPath;
     public Vector2 SpawnDirection { get; set; } = Vector2.Down;
+    public bool Active { get; private set; } = true;
 
     private Area2D collision;
     private Area2D stateTrigger;
+    private AnimatedSprite2D animatedSprite;
     private Player player;
 
     public override void _Ready()
@@ -26,6 +28,7 @@ public partial class Enemy : Node2D
         base._Ready();
         collision = GetNode<Area2D>("Collision");
         stateTrigger = GetTree().Root.GetNode<Area2D>("Game/Triggers/EnemyStateTrigger");
+        animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         player = GetParent().GetNode<Player>("Player");
 
         collision.AreaEntered += HandleAreaEntered;
@@ -40,6 +43,8 @@ public partial class Enemy : Node2D
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if (!Active)
+            return;
         HandleMovement(delta);
     }
 
@@ -82,10 +87,17 @@ public partial class Enemy : Node2D
     public void Damage(int amount)
     {
         Health = Health - amount;
-        if (Health <= 0)
+        if (Health <= 0 && Active)
         {
+            Active = false;
             player.EmitSignal(Player.SignalName.AddKill);
-            QueueFree();
+            animatedSprite.AnimationFinished += HandleDeathAnimationFinished;
+            animatedSprite.Play("death");
         }
+    }
+
+    private void HandleDeathAnimationFinished()
+    {
+        QueueFree();
     }
 }

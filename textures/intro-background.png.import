@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd864ip7lq21f"
-path="res://.godot/imported/printer-0.png-20ce55ef0cc001d3394d93758ef0ff33.ctex"
+uid="uid://bdp7ig2qumeiy"
+path="res://.godot/imported/intro-background.png-f000a8897d9b064aa12e66aee88ca9f8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/printer-0.png"
-dest_files=["res://.godot/imported/printer-0.png-20ce55ef0cc001d3394d93758ef0ff33.ctex"]
+source_file="res://textures/intro-background.png"
+dest_files=["res://.godot/imported/intro-background.png-f000a8897d9b064aa12e66aee88ca9f8.ctex"]
 
 [params]
 

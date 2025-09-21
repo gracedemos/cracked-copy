@@ -8,9 +8,13 @@ public partial class Player : Node2D
     public Area2D Collision { get; private set; }
     public int Kills { get; private set; } = 0;
 
+    public const double ShootCooldown = 0.9 * Manager.SecondsPerBeat;
+
     private PackedScene eggProjectile = ResourceLoader.Load<PackedScene>("scenes/egg-projectile.tscn");
     private AnimatedSprite2D animatedSprite;
     private GameUI gameUI;
+    private bool canShoot = true;
+    private Timer cooldownTimer;
 
     public override void _Ready()
     {
@@ -18,8 +22,17 @@ public partial class Player : Node2D
         Collision = GetNode<Area2D>("Collision");
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         animatedSprite.Play("idle");
-
         AddKill += HandleAddKill;
+
+        cooldownTimer = new Timer();
+        cooldownTimer.OneShot = true;
+        cooldownTimer.Timeout += HandleCooldown;
+        AddChild(cooldownTimer);
+    }
+
+    private void HandleCooldown()
+    {
+        canShoot = true;
     }
 
     public override void _Input(InputEvent @event)
@@ -27,11 +40,14 @@ public partial class Player : Node2D
         base._Input(@event);
         if (@event is InputEventMouseButton mouseEvent)
         {
-            if (mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
+            if (mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left && canShoot)
             {
                 EggProjectile eggProjectileInstance = eggProjectile.Instantiate<EggProjectile>();
                 eggProjectileInstance.Target = GetGlobalMousePosition();
                 GetParent().AddChild(eggProjectileInstance);
+
+                canShoot = false;
+                cooldownTimer.Start(ShootCooldown);
             }
         }
     }
@@ -48,6 +64,6 @@ public partial class Player : Node2D
 
     private void KillPlayerDeferred()
     {
-        GetTree().ChangeSceneToFile("scenes/game-over.tscn");
+        Manager.Instance.SwitchScene(Manager.Scene.GameOver);
     }
 }

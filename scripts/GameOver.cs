@@ -18,6 +18,6 @@ public partial class GameOver : Node
 
     private void ReloadGameScene()
     {
-        GetTree().ChangeSceneToFile("scenes/game.tscn");
+        Manager.Instance.SwitchScene(Manager.Scene.Game);
     }
 }
