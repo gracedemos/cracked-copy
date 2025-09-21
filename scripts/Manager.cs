@@ -124,6 +124,7 @@ public partial class Manager : Node
     {
         musicLoops = 0;
         musicCycle = 0;
+        gameOverInitialDone = false;
         Input.MouseMode = Input.MouseModeEnum.Visible;
         enemyManager.Reset();
     }
