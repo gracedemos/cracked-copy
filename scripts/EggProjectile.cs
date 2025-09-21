@@ -4,7 +4,7 @@ public partial class EggProjectile : Node2D
 {
     public Vector2 Target { get; set; }
 
-    public const float MovementSpeed = 200.0f;
+    public const float MovementSpeed = 500.0f;
     public const int Damage = 100;
 
     private Area2D collision;
@@ -25,7 +25,7 @@ public partial class EggProjectile : Node2D
     private void HandleMovement(double delta)
     {
         Vector2 direction = (Target - Position);
-        if (direction.Length() < 1.0f)
+        if (direction.Length() < 2.0f)
             QueueFree();
         direction = direction.Normalized();
         Position = Position + direction * MovementSpeed * (float)delta;

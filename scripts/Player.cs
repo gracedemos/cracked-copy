@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 public partial class Player : Node2D
 {
@@ -8,13 +9,14 @@ public partial class Player : Node2D
     public Area2D Collision { get; private set; }
     public int Kills { get; private set; } = 0;
 
-    public const double ShootCooldown = 0.9 * Manager.SecondsPerBeat;
+    public const double ShootCooldown = 0.8 * Manager.SecondsPerBeat;
 
     private PackedScene eggProjectile = ResourceLoader.Load<PackedScene>("scenes/egg-projectile.tscn");
     private AnimatedSprite2D animatedSprite;
     private GameUI gameUI;
     private bool canShoot = true;
     private Timer cooldownTimer;
+    private Random random = new Random();
 
     public override void _Ready()
     {
@@ -45,6 +47,10 @@ public partial class Player : Node2D
                 EggProjectile eggProjectileInstance = eggProjectile.Instantiate<EggProjectile>();
                 eggProjectileInstance.Target = GetGlobalMousePosition();
                 GetParent().AddChild(eggProjectileInstance);
+
+                int launchAudioIndex = random.Next(3);
+                Manager.Instance.EffectPlayer.Stream = Manager.Instance.LaunchAudios[launchAudioIndex];
+                Manager.Instance.EffectPlayer.Play();
 
                 canShoot = false;
                 cooldownTimer.Start(ShootCooldown);

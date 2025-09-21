@@ -1,0 +1,82 @@
+[gd_scene load_steps=11 format=3 uid="uid://bar0b0kbpmsoq"]
+
+[ext_resource type="Texture2D" uid="uid://cu3vumoem8yi8" path="res://textures/printer-1.png" id="1_3yw8i"]
+[ext_resource type="Script" uid="uid://boeueqo3f1npn" path="res://scripts/Enemy.cs" id="1_uijm5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uijm5"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_akk8h"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84hbl"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fwi6d"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j2f0v"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eoa38"]
+atlas = ExtResource("1_3yw8i")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yb36n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uijm5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akk8h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_84hbl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fwi6d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j2f0v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eoa38")
+}],
+"loop": false,
+"name": &"death",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uijm5")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3yw8i"]
+size = Vector2(18.29664, 17.895105)
+
+[node name="Enemy1" type="Node2D"]
+script = ExtResource("1_uijm5")
+MovementSpeed = 30.0
+Health = 200
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_yb36n")
+animation = &"idle"
+
+[node name="Collision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
+position = Vector2(-1.0000002, -1.4663415)
+rotation = -3.1415925
+scale = Vector2(1.4210258, -1.3932682)
+shape = SubResource("RectangleShape2D_3yw8i")

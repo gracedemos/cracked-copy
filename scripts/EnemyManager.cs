@@ -6,7 +6,13 @@ public class EnemyManager
     public enum Wave
     {
         First,
-        Second
+        Second,
+        Third,
+        Fourth,
+        Fifth,
+        Sixth,
+        Seventh,
+        Eighth
     }
 
     private const int BossSpawner = 2;
@@ -20,6 +26,7 @@ public class EnemyManager
     private int lastSpawnerIndex = -1;
     private int spawnCount = 0;
     private bool doSpawn = true;
+    private bool spawnFifth = true;
 
     public EnemyManager(Timer spawnTimer)
     {
@@ -37,6 +44,24 @@ public class EnemyManager
                 break;
             case Wave.Second:
                 SecondWave();
+                break;
+            case Wave.Third:
+                ThirdWave();
+                break;
+            case Wave.Fourth:
+                FourthWave();
+                break;
+            case Wave.Fifth:
+                FifthWave();
+                break;
+            case Wave.Sixth:
+                SixthWave();
+                break;
+            case Wave.Seventh:
+                SeventhWave();
+                break;
+            case Wave.Eighth:
+                EighthWave();
                 break;
         }
     }
@@ -74,11 +99,11 @@ public class EnemyManager
         lastSpawnerIndex = spawnerIndex;
         if (spawnerIndex == BossSpawner)
             spawnerIndex = 5;
-        spawners[spawnerIndex].Spawn();
+        spawners[spawnerIndex].Spawn(0);
         spawnCount++;
         spawnTimer.Start();
 
-        if (spawnCount >= 32)
+        if (spawnCount >= 20)
         {
             spawnCount = 0;
             EnemyWave = Wave.Second;
@@ -93,14 +118,161 @@ public class EnemyManager
         lastSpawnerIndex = spawnerIndex;
         if (spawnerIndex == BossSpawner)
             spawnerIndex = 5;
-        spawners[spawnerIndex].Spawn();
+        spawners[spawnerIndex].Spawn(0);
+        spawnCount++;
+        spawnTimer.Start();
+
+        if (spawnCount >= 24)
+        {
+            spawnCount = 0;
+            EnemyWave = Wave.Third;
+        }
+    }
+
+    private void ThirdWave()
+    {
+        if (!doSpawn)
+        {
+            doSpawn = true;
+            spawnTimer.Start();
+            return;
+        }
+        doSpawn = false;
+
+        int spawnerIndex = random.Next(5);
+        while (spawnerIndex == lastSpawnerIndex)
+            spawnerIndex = random.Next(5);
+        lastSpawnerIndex = spawnerIndex;
+        if (spawnerIndex == BossSpawner)
+            spawnerIndex = 5;
+        spawners[spawnerIndex].Spawn(1);
+        spawnCount++;
+        spawnTimer.Start();
+
+        if (spawnCount >= 8)
+        {
+            spawnCount = 0;
+            EnemyWave = Wave.Fourth;
+        }
+    }
+
+    private void FourthWave()
+    {
+        if (!doSpawn)
+        {
+            doSpawn = true;
+            spawnTimer.Start();
+            return;
+        }
+        doSpawn = false;
+
+        int spawnerIndex = random.Next(5);
+        while (spawnerIndex == lastSpawnerIndex)
+            spawnerIndex = random.Next(5);
+        lastSpawnerIndex = spawnerIndex;
+        if (spawnerIndex == BossSpawner)
+            spawnerIndex = 5;
+        spawners[spawnerIndex].Spawn(0);
+        spawnCount++;
+        spawnTimer.Start();
+
+        if (spawnCount >= 8)
+        {
+            spawnCount = 0;
+            EnemyWave = Wave.Fifth;
+        }
+    }
+
+    private void FifthWave()
+    {
+        if (spawnFifth)
+        {
+            spawners[2].Spawn(2);
+            spawnCount++;
+            spawnFifth = false;
+            spawnTimer.Start();
+        }
+        else
+        {
+            spawnCount++;
+            spawnTimer.Start();
+            if (spawnCount >= 6)
+            {
+                spawnCount = 0;
+                spawnFifth = true;
+                lastSpawnerIndex = -1;
+                EnemyWave = Wave.Sixth;
+            }
+        }
+    }
+
+    private void SixthWave()
+    {
+        int spawnerIndex = random.Next(5);
+        while (spawnerIndex == lastSpawnerIndex)
+            spawnerIndex = random.Next(5);
+        lastSpawnerIndex = spawnerIndex;
+        if (spawnerIndex == BossSpawner)
+            spawnerIndex = 5;
+        spawners[spawnerIndex].Spawn(0);
         spawnCount++;
         spawnTimer.Start();
 
         if (spawnCount >= 16)
         {
             spawnCount = 0;
-            EnemyWave = Wave.First;
+            EnemyWave = Wave.Seventh;
+        }
+    }
+
+    private void SeventhWave()
+    {
+        if (!doSpawn)
+        {
+            doSpawn = true;
+            spawnTimer.Start();
+            return;
+        }
+        doSpawn = false;
+
+        int spawnerIndex = random.Next(5);
+        while (spawnerIndex == lastSpawnerIndex)
+            spawnerIndex = random.Next(5);
+        lastSpawnerIndex = spawnerIndex;
+        if (spawnerIndex == BossSpawner)
+            spawnerIndex = 5;
+        spawners[spawnerIndex].Spawn(1);
+        spawnCount++;
+        spawnTimer.Start();
+
+        if (spawnCount >= 32)
+        {
+            spawnCount = 0;
+            EnemyWave = Wave.Eighth;
+        }
+    }
+
+    private void EighthWave()
+    {
+        if (spawnFifth)
+        {
+            spawners[2].Spawn(2);
+            spawnCount++;
+            if (spawnCount >= 4)
+                spawnFifth = false;
+            spawnTimer.Start();
+        }
+        else
+        {
+            spawnCount++;
+            spawnTimer.Start();
+            if (spawnCount >= 8)
+            {
+                spawnCount = 0;
+                spawnFifth = true;
+                lastSpawnerIndex = -1;
+                EnemyWave = Wave.First;
+            }
         }
     }
 }

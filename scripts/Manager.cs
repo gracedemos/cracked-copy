@@ -25,20 +25,45 @@ public partial class Manager : Node
     public const double SecondsPerBeat = 60.0 / 137.0;
 
     public AudioStreamPlayer MusicPlayer { get; private set; }
+    public AudioStreamPlayer MusicPlayerB { get; private set; }
     public AudioStreamPlayer EffectPlayer { get; private set; }
     public MusicState ManagerMusicState { get; private set; }
     public Scene CurrentScene { get; private set; } = Scene.Intro;
+    public AudioStreamWav AudioDamageEnemy { get; private set; } = ResourceLoader.Load<AudioStreamWav>("audio/Egg_Dmg_Enemy.wav");
+    public AudioStreamWav AudioKillEnemy { get; private set; } = ResourceLoader.Load<AudioStreamWav>("audio/Egg_Kill_Enemy.wav");
+    public AudioStreamWav[] LaunchAudios { get; private set; } = {
+        ResourceLoader.Load<AudioStreamWav>("audio/Launch_1.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Launch_2.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Launch_3.wav")
+    };
+    public AudioStreamWav[] SpawnAudios { get; private set; } = {
+        ResourceLoader.Load<AudioStreamWav>("audio/Spawn_1.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Spawn_2.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Spawn_3.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Spawn_4.wav"),
+        ResourceLoader.Load<AudioStreamWav>("audio/Spawn_5.wav")
+    };
 
-    private AudioStreamWav audioIntro = ResourceLoader.Load<AudioStreamWav>("audio/Credits_Track.wav");
+    private AudioStreamWav audioIntro = ResourceLoader.Load<AudioStreamWav>("audio/Credits_Track_STEREO.wav");
     private AudioStreamWav audioStart = ResourceLoader.Load<AudioStreamWav>("audio/Level_Start_1.wav");
-    private AudioStreamWav audioA = ResourceLoader.Load<AudioStreamWav>("audio/Level_A_1.wav");
-    private AudioStreamWav audioB = ResourceLoader.Load<AudioStreamWav>("audio/Level_B_1.wav");
-    private AudioStreamWav audioC = ResourceLoader.Load<AudioStreamWav>("audio/Level_C_1.wav");
+    private AudioStreamWav audioGutteralInitial = ResourceLoader.Load<AudioStreamWav>("audio/Lose_Track_Gutteral_Initial.wav");
+    private AudioStreamWav audioGutteralLoop = ResourceLoader.Load<AudioStreamWav>("audio/Lose_Track_Gutteral_Loop.wav");
+    private AudioStreamWav audioDroneLoop = ResourceLoader.Load<AudioStreamWav>("audio/Lose_Track_Drone_Loop_Hopefully_Not.wav");
+    private AudioStreamWav audioA1 = ResourceLoader.Load<AudioStreamWav>("audio/Level_A_1.wav");
+    private AudioStreamWav audioA2 = ResourceLoader.Load<AudioStreamWav>("audio/Level_A_2.wav");
+    private AudioStreamWav audioA3 = ResourceLoader.Load<AudioStreamWav>("audio/Level_A_3.wav");
+    private AudioStreamWav audioB1 = ResourceLoader.Load<AudioStreamWav>("audio/Level_B_1.wav");
+    private AudioStreamWav audioB2 = ResourceLoader.Load<AudioStreamWav>("audio/Level_B_2.wav");
+    private AudioStreamWav audioB3 = ResourceLoader.Load<AudioStreamWav>("audio/Level_B_3.wav");
+    private AudioStreamWav audioC1 = ResourceLoader.Load<AudioStreamWav>("audio/Level_C_1.wav");
+    private AudioStreamWav audioC2 = ResourceLoader.Load<AudioStreamWav>("audio/Level_C_2.wav");
+    private AudioStreamWav audioC3 = ResourceLoader.Load<AudioStreamWav>("audio/Level_BOSS_AFTER_B_3.wav");
     private int musicLoops = 0;
-    private bool continueFromB = false;
+    private int musicCycle = 0;
     private EnemyManager enemyManager;
     private PackedScene gameScene = ResourceLoader.Load<PackedScene>("scenes/game.tscn");
     private PackedScene gameOverScene = ResourceLoader.Load<PackedScene>("scenes/game-over.tscn");
+    private bool gameOverInitialDone = false;
 
     public override void _Ready()
     {
@@ -52,11 +77,25 @@ public partial class Manager : Node
         AddChild(MusicPlayer);
         MusicPlayer.Play();
 
+        MusicPlayerB = new AudioStreamPlayer();
+        MusicPlayerB.Finished += () => MusicPlayerB.Play();
+        AddChild(MusicPlayerB);
+
+        EffectPlayer = new AudioStreamPlayer();
+        AddChild(EffectPlayer);
+
         Timer spawnTimer = new Timer();
         spawnTimer.WaitTime = SecondsPerBeat;
         spawnTimer.OneShot = true;
         AddChild(spawnTimer);
         enemyManager = new EnemyManager(spawnTimer);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        if (Input.IsActionJustPressed("Quit"))
+            GetTree().Root.QueueFree();
     }
 
     public void SwitchScene(Scene scene)
@@ -67,15 +106,26 @@ public partial class Manager : Node
             case Scene.Game:
                 GetTree().Root.AddChild(gameScene.Instantiate<Node>());
                 enemyManager.Init(GetEnemySpawners(), GetPlayer());
+                Input.MouseMode = Input.MouseModeEnum.Hidden;
                 SetMusicState(MusicState.Start);
                 CurrentScene = Scene.Game;
                 break;
             case Scene.GameOver:
                 GetTree().Root.AddChild(gameOverScene.Instantiate<Node>());
                 SetMusicState(MusicState.GameOver);
+                MusicPlayerB.Stream = audioDroneLoop;
+                MusicPlayerB.Play();
                 CurrentScene = Scene.GameOver;
                 break;
         }
+    }
+
+    private void Reset()
+    {
+        musicLoops = 0;
+        musicCycle = 0;
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        enemyManager.Reset();
     }
 
     private void QueueFreeCurrentScene()
@@ -87,10 +137,11 @@ public partial class Manager : Node
                 scene = GetTree().Root.GetNode<Node>("Intro");
                 break;
             case Scene.Game:
-                enemyManager.Reset();
+                Reset();
                 scene = GetTree().Root.GetNode<Node>("Game");
                 break;
             case Scene.GameOver:
+                MusicPlayerB.Stop();
                 scene = GetTree().Root.GetNode<Node>("GameOver");
                 break;
         }
@@ -126,19 +177,60 @@ public partial class Manager : Node
                 MusicPlayer.Play();
                 break;
             case MusicState.GameOver:
-                MusicPlayer.Stream = audioStart;
+                if (gameOverInitialDone)
+                {
+                    MusicPlayer.Stream = audioGutteralLoop;
+                }
+                else
+                {
+                    MusicPlayer.Stream = audioGutteralInitial;
+                    gameOverInitialDone = true;
+                }
                 MusicPlayer.Play();
                 break;
             case MusicState.A:
-                MusicPlayer.Stream = audioA;
+                switch (musicCycle)
+                {
+                    case 0:
+                        MusicPlayer.Stream = audioA1;
+                        break;
+                    case 1:
+                        MusicPlayer.Stream = audioA2;
+                        break;
+                    case 2:
+                        MusicPlayer.Stream = audioA3;
+                        break;
+                }
                 MusicPlayer.Play();
                 break;
             case MusicState.B:
-                MusicPlayer.Stream = audioB;
+                switch (musicCycle)
+                {
+                    case 0:
+                        MusicPlayer.Stream = audioB1;
+                        break;
+                    case 1:
+                        MusicPlayer.Stream = audioB2;
+                        break;
+                    case 2:
+                        MusicPlayer.Stream = audioB3;
+                        break;
+                }
                 MusicPlayer.Play();
                 break;
             case MusicState.C:
-                MusicPlayer.Stream = audioC;
+                switch (musicCycle)
+                {
+                    case 0:
+                        MusicPlayer.Stream = audioC1;
+                        break;
+                    case 1:
+                        MusicPlayer.Stream = audioC2;
+                        break;
+                    case 2:
+                        MusicPlayer.Stream = audioC3;
+                        break;
+                }
                 MusicPlayer.Play();
                 break;
         }
@@ -175,38 +267,30 @@ public partial class Manager : Node
 
     private void HandleMusicLoopA()
     {
-        SetMusicState(MusicState.A);
-        musicLoops++;
-        if (musicLoops >= 2)
-        {
-            musicLoops = 0;
-            SetMusicState(MusicState.B);
-        }
-
+        SetMusicState(MusicState.B);
     }
 
     private void HandleMusicLoopB()
     {
-        if (continueFromB)
-        {
-            musicLoops = 0;
-            SetMusicState(MusicState.C);
-        }
-        else
-        {
-            SetMusicState(MusicState.B);
-            musicLoops++;
-            if (musicLoops >= 2)
-            {
-                musicLoops = 0;
-                continueFromB = true;
-                SetMusicState(MusicState.A);
-            }
-        }
+        SetMusicState(MusicState.C);
     }
 
     private void HandleMusicLoopC()
     {
-        SetMusicState(MusicState.C);
+        switch (musicCycle)
+        {
+            case 0:
+                musicCycle++;
+                SetMusicState(MusicState.A);
+                break;
+            case 1:
+                musicCycle++;
+                SetMusicState(MusicState.A);
+                break;
+            case 2:
+                musicCycle = 0;
+                SetMusicState(MusicState.A);
+                break;
+        }
     }
 }

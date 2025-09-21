@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=4 uid="uid://lnad56yma14l"]
+[gd_scene load_steps=8 format=4 uid="uid://lnad56yma14l"]
 
 [ext_resource type="TileSet" uid="uid://ccb6f33v327q3" path="res://tilesets/cyber-tileset-0.tres" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cgdefrp6inc5v" path="res://scenes/player.tscn" id="2_yqjtg"]
 [ext_resource type="Script" uid="uid://cmfhpaomix1fx" path="res://scripts/EnemySpawner.cs" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cb63xixi4tms6" path="res://scenes/game-ui.tscn" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://clxvqhil6af8g" path="res://scenes/cursor.tscn" id="5_iywne"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lnu2h"]
 size = Vector2(20, 20.431942)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
+size = Vector2(25.333828, 24.020027)
 
 [node name="Game" type="Node2D"]
 
@@ -62,6 +66,15 @@ scale = Vector2(27.123917, 8.243912)
 shape = SubResource("RectangleShape2D_lnu2h")
 debug_color = Color(0, 0.6, 0.69803923, 0)
 
+[node name="Enemy2StateTrigger" type="Area2D" parent="Triggers"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/Enemy2StateTrigger"]
+position = Vector2(167, 81)
+rotation = -3.1415925
+scale = Vector2(1.4210258, -1.3932682)
+shape = SubResource("RectangleShape2D_iywne")
+debug_color = Color(0, 0.6, 0.69803923, 0)
+
 [node name="UI" type="Node2D" parent="."]
 
 [node name="GameUi" parent="UI" instance=ExtResource("4_lbhrr")]
@@ -69,3 +82,5 @@ offset_left = -288.0
 offset_top = -160.0
 offset_right = -288.0
 offset_bottom = -160.0
+
+[node name="Cursor" parent="UI" instance=ExtResource("5_iywne")]

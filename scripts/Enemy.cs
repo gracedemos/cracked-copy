@@ -14,6 +14,9 @@ public partial class Enemy : Node2D
     [Export]
     public int Health = 100;
 
+    [Export]
+    public string StateTriggerNode = "Game/Triggers/EnemyStateTrigger";
+
     public EnemyState State { get; private set; } = EnemyState.PresetPath;
     public Vector2 SpawnDirection { get; set; } = Vector2.Down;
     public bool Active { get; private set; } = true;
@@ -27,7 +30,7 @@ public partial class Enemy : Node2D
     {
         base._Ready();
         collision = GetNode<Area2D>("Collision");
-        stateTrigger = GetTree().Root.GetNode<Area2D>("Game/Triggers/EnemyStateTrigger");
+        stateTrigger = GetTree().Root.GetNode<Area2D>(StateTriggerNode);
         animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         player = GetParent().GetNode<Player>("Player");
 
@@ -93,6 +96,13 @@ public partial class Enemy : Node2D
             player.EmitSignal(Player.SignalName.AddKill);
             animatedSprite.AnimationFinished += HandleDeathAnimationFinished;
             animatedSprite.Play("death");
+            Manager.Instance.EffectPlayer.Stream = Manager.Instance.AudioKillEnemy;
+            Manager.Instance.EffectPlayer.Play();
+        }
+        else
+        {
+            Manager.Instance.EffectPlayer.Stream = Manager.Instance.AudioDamageEnemy;
+            Manager.Instance.EffectPlayer.Play();
         }
     }
 
