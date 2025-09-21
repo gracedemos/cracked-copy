@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Egg Defense"
+config/name="Cracked Copy"
 run/main_scene="uid://lnad56yma14l"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"

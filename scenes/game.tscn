@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=4 uid="uid://lnad56yma14l"]
+[gd_scene load_steps=6 format=4 uid="uid://lnad56yma14l"]
 
 [ext_resource type="TileSet" uid="uid://ccb6f33v327q3" path="res://tilesets/cyber-tileset-0.tres" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cgdefrp6inc5v" path="res://scenes/player.tscn" id="2_yqjtg"]
 [ext_resource type="Script" uid="uid://cmfhpaomix1fx" path="res://scripts/EnemySpawner.cs" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://cb63xixi4tms6" path="res://scenes/game-ui.tscn" id="4_lbhrr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lnu2h"]
 size = Vector2(20, 22.130165)
@@ -31,6 +32,7 @@ On = true
 [node name="Spawner1" type="Node2D" parent="Entities"]
 position = Vector2(-2, -129)
 script = ExtResource("3_lnu2h")
+On = true
 
 [node name="Spawner2" type="Node2D" parent="Entities"]
 position = Vector2(164, -129)
@@ -40,16 +42,19 @@ script = ExtResource("3_lnu2h")
 position = Vector2(-159, 187)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
+On = true
 
 [node name="Spawner4" type="Node2D" parent="Entities"]
 position = Vector2(-2, 187)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
+On = true
 
 [node name="Spawner5" type="Node2D" parent="Entities"]
 position = Vector2(164, 187)
 script = ExtResource("3_lnu2h")
 Direction = Vector2(0, -1)
+On = true
 
 [node name="Triggers" type="Node2D" parent="."]
 
@@ -61,3 +66,11 @@ position = Vector2(0, 8.780442)
 scale = Vector2(27.123917, 8.243912)
 shape = SubResource("RectangleShape2D_lnu2h")
 debug_color = Color(0, 0.6, 0.69803923, 0)
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="GameUi" parent="UI" instance=ExtResource("4_lbhrr")]
+offset_left = -288.0
+offset_top = -160.0
+offset_right = -288.0
+offset_bottom = -160.0

@@ -5,6 +5,7 @@ public partial class EggProjectile : Node2D
     public Vector2 Target { get; set; }
 
     public const float MovementSpeed = 200.0f;
+    public const int Damage = 100;
 
     private Area2D collision;
 
@@ -35,7 +36,7 @@ public partial class EggProjectile : Node2D
         Node areaParent = area.GetParent();
         if (areaParent is Enemy)
         {
-            areaParent.QueueFree();
+            ((Enemy)areaParent).Damage(Damage);
             QueueFree();
         }
     }

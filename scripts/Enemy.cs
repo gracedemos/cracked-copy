@@ -78,4 +78,14 @@ public partial class Enemy : Node2D
             State = EnemyState.PlayerPath;
         }
     }
+
+    public void Damage(int amount)
+    {
+        Health = Health - amount;
+        if (Health <= 0)
+        {
+            player.EmitSignal(Player.SignalName.AddKill);
+            QueueFree();
+        }
+    }
 }

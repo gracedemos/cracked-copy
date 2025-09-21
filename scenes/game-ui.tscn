@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb63xixi4tms6"]
+
+[ext_resource type="Script" uid="uid://x0to55q8vw7a" path="res://scripts/GameUI.cs" id="1_ls1rh"]
+[ext_resource type="FontFile" uid="uid://cauhb8qusfpuo" path="res://fonts/Cinzel-VariableFont_wght.ttf" id="1_n0uq2"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ls1rh"]
+font = ExtResource("1_n0uq2")
+
+[node name="GameUi" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ls1rh")
+
+[node name="KillLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 5.0
+offset_right = 67.0
+offset_bottom = 28.0
+text = "KILLS: 0"
+label_settings = SubResource("LabelSettings_ls1rh")
