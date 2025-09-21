@@ -218,34 +218,18 @@ public class EnemyManager
         spawnCount++;
         spawnTimer.Start();
 
-        if (spawnCount >= 16)
+        if (spawnCount >= 32)
         {
             spawnCount = 0;
-            EnemyWave = Wave.Seventh;
+            EnemyWave = Wave.First;
         }
     }
 
     private void SeventhWave()
     {
-        if (!doSpawn)
-        {
-            doSpawn = true;
-            spawnTimer.Start();
-            return;
-        }
-        doSpawn = false;
-
-        int spawnerIndex = random.Next(5);
-        while (spawnerIndex == lastSpawnerIndex)
-            spawnerIndex = random.Next(5);
-        lastSpawnerIndex = spawnerIndex;
-        if (spawnerIndex == BossSpawner)
-            spawnerIndex = 5;
-        spawners[spawnerIndex].Spawn(1);
         spawnCount++;
         spawnTimer.Start();
-
-        if (spawnCount >= 32)
+        if (spawnCount >= 4)
         {
             spawnCount = 0;
             EnemyWave = Wave.Eighth;
